@@ -467,11 +467,12 @@ coo_matrix getMatrix(vector<int> &vec, int row_size, int col_size) {
 	cudaMalloc((void **) &row, vec.size() * sizeof(int));
 	cudaMalloc((void **) &col, vec.size() * sizeof(int));
 
-	sequence<<<num_blocks, 1024>>>(row, vec.size());
-	cudaMemcpy(col, row, vec.size() * sizeof(int), cudaMemcpyDeviceToDevice);
-	setter<<<num_blocks, 1024>>>(val, vec.size());
+	// The next four lines are for creating a dia matrix with ones in the required places
+	// i.e. the indices corresponding to words in the query.
 	std::sort(vec.begin(), vec.end());
-	cudaMemcpy(val, &vec[0], vec.size() * sizeof(int), cudaMemcpyHostToDevice);
+	cudaMemcpy(row, &vec[0], vec.size() * sizeof(int), cudaMemcpyHostToDevice);
+	cudaMemcpy(col, row, vec.size() * sizeof(int), cudaMemcpyDeviceToDevice);
+	setter<<<num_blocks, 1024>>>(val, vec.size(), 1);
 
 	cudaMalloc((void **) &csr, (row_size + 1) * sizeof(int));
 	cusparseXcoo2csr(handle,
