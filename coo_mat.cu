@@ -159,6 +159,12 @@ Vector Vector::operator - (Vector &second) {
 	return Vector();
 }
 
+bool Vector::operator ! (void) {
+	// Could've also checked for this->data == NULL
+	// We guarantee that size == 0 iff data == NULL. Only occurs for uninitialized Vector.
+	return (this->size == 0);
+}
+
 void Vector::createSparse(vector<int> &val, int size, int defval) {
 	bool flag = false;
 

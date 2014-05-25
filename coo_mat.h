@@ -38,7 +38,7 @@ class Vector {
 	double *data;
 	int size;
 public:
-	Vector() {}		// Initializing an empty vector. Mostly returned during errors.
+	Vector() { data = NULL; size = 0; }		// Initializing an empty vector. Mostly returned during errors.
 	Vector(double val, int size);
 	Vector(double **arr, int size);
 	Vector(vector<double> &arr);
@@ -51,6 +51,7 @@ public:
 	Vector operator * (double val);
 	Vector operator + (Vector &second);
 	Vector operator - (Vector &second);
+	Vector operator ! (void);		// For checking uninitialized Vectors
 
 	void createSparse(vector<int> &, int, int defval = 1);
 
