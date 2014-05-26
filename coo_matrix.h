@@ -82,6 +82,7 @@ public:
 	coo_matrix() {
 		cooVal = NULL;
 		cooRow = cooCol = csrRowPtr = NULL;
+		num_rows = num_cols = nnz = 0;
 	}
 	coo_matrix(int nRows, int nCols, int nNZ, double **val, int **row, int **col, int **csr, cusparseMatDescr_t descr) {
 		num_rows = nRows; num_cols = nCols; nnz = nNZ;
@@ -102,10 +103,12 @@ public:
 	int getNumCols() { return num_cols; }
 	int getNNZ() { return nnz; }
 	void diagonalize(Vector &arr);
+
 	coo_matrix &operator * (double val);
 	coo_matrix operator * (coo_matrix &mat);
 	Vector operator * (Vector &arr);
 	coo_matrix operator ~ (void);		// Transpose
+	bool operator ! (void);		// NOT operator, validity testing
 	friend ostream &operator << (ostream &, coo_matrix &);
 
 	// You will not understand the purpose unless you read the appl

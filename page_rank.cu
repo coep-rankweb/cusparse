@@ -1,5 +1,60 @@
 #define THRESHOLD	0.000001
 
+coo_matrix readMatrix(char *filename) {
+
+	char buf[64], *ptr;
+	int num_rows, num_cols, nnz;
+
+	vector<int> row_indices, col_indices, values;
+
+
+	FILE *f = fopen(filename, "r");
+	if (f == NULL) {
+		perror("fopen");
+		exit(errno);
+	}
+
+	// Reading and discarding the first two lines in the banner, taking the values in the third line
+	fgets(buf, sizeof(buf), f);
+	fgets(buf, sizeof(buf), f);
+	fgets(buf, sizeof(buf), f);
+	ptr = strtok(buf, "\t");
+	num_rows = atoi(ptr);
+	ptr = strtok(NULL, "\t");
+	num_cols = atoi(ptr);
+	ptr = strtok(NULL, "\t");
+	nnz = atoi(ptr);
+	//free(ptr);
+
+	cout << "Read the banner" << endl;
+	for (int i = 0; i < nnz; i++) {
+		cout << "Line number:" << i << endl;
+		if(fgets(buf, sizeof(buf), f) != NULL) {
+			ptr = strtok(buf, "\t");
+			row_indices.push_back(atoi(ptr) - 1);
+
+			ptr = strtok(NULL, "\t");
+			col_indices.push_back(atoi(ptr) - 1);
+
+			ptr = strtok(NULL, "\t");
+			values.push_back(atoi(ptr));
+
+			//free(ptr);
+		}
+		else {
+			printf("Invalid matrix: number of entries less than %d\n", num_entries);
+			return coo_matrix();
+		}
+	}
+
+	cout << "Parsed the file" << endl;
+	if(fgets(buf, sizeof(buf), f) != NULL) {
+		printf("Invalid matrix: number of entries greater than %d\n", num_entries);
+		return coo_matrix();
+	}
+
+	return coo_matrix(row_indices, col_indices, values, num_rows, num_cols);
+}
 
 // I thought it is better to keep mat intact.
 // If you want to change it and make it in-place do that.

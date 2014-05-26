@@ -1,4 +1,4 @@
-#include "coo_mat.h"
+#include "coo_matrix.h"
 
 cusparseHandle_t handle;
 
@@ -405,6 +405,11 @@ coo_matrix coo_matrix::operator ~ (void) {
 	);
 
 	return coo_matrix(num_cols, num_rows, nnz, &val, &row, &col, &csr, descr);
+}
+
+bool coo_matrix::operator ! (void) {
+	// Alternatively, we could check for any of the other values.
+	return (nnz == 0);
 }
 
 ostream &operator << (ostream &out, coo_matrix &mat) {
